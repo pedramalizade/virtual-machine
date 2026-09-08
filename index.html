@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="pannellum.css">
+    <script src="pannellum.js"></script>
+
+    <style>
+        html, body{
+            margin:0;
+            width:100%;
+            height:100%;
+            overflow:hidden;
+        }
+
+        #panorama{
+            width:100%;
+            height:100vh;
+        }
+
+        .pnlm-container{
+            background: url("loadingpages.png") no-repeat !important;
+            background-size: cover !important;
+        }
+
+        .pnlm-load-box.loading-text{
+            left:50% !important;
+            top:50% !important;
+            transform:translate(-50%,-50%) !important;
+            margin:0 !important;
+            width:750px;
+            max-width:90vw;
+            min-height:260px;
+            height:auto;
+            padding:30px 40px;
+            background:rgba(0,0,0,.45);
+            border-radius:18px;
+            box-sizing:border-box;
+        }
+
+        .pnlm-load-box p{
+            color:white !important;
+            font-size:22px !important;
+            line-height:2.2 !important;
+            text-align:center;
+            margin:0 0 25px 0 !important;
+            font-family:tahoma;
+            white-space:normal;
+            word-break:break-word;
+            overflow-wrap:anywhere;
+        }
+
+        .pnlm-lbar{
+            width:180px;
+            margin:25px auto 0 auto !important;
+        }
+
+        .pnlm-lbar-fill{
+            background: white !important;
+        }
+
+        #logo{
+            position:fixed;
+            top:20px;
+            right:20px;
+            width:90px;
+            height:auto;
+            z-index:9999;
+            pointer-events:none;
+            opacity:0.95;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="panorama"></div>
+<img id="logo" src="logo.png" alt="Logo">
+
+<script>
+
+const sceneTexts = {
+    room1: "این پروژه یک کافه‌بیکری است؛ فضایی که تجربه نوشیدن قهوه و عطر نان تازه را در کنار هم قرار می‌دهد...",
+    room2: "اینجا صندوق اصلی کافه‌بیکری قرار دارد؛ جایی که سفارش‌ها نهایی می‌شوند و مسیر خرید کامل می‌شود...",
+    room3: "در این بخش، ویترین‌ها فقط محل نمایش محصولات نیستند...",
+    room4: "پس از انتخاب محصول، سفارش‌ها در این بخش آماده می‌شوند...",
+    room5: "در این قسمت، جزئیات کوچک به اندازه طراحی کلی اهمیت دارند...",
+    room6: "این کافه‌بیکری برای لحظه‌های مختلف روز طراحی شده است...",
+    room7: "در این بخش به پیشخوان کافه میرسید. ترکیب چوب و سنگ تیره کانتر را به یکی از شاخص‌ترین عناصر پروژه تبدیل کرده است. در اینجا فرآیند آماده‌سازی از دید مخاطب پنهان نیست؛ زیرا بخشی از تجربه حضور در کافه، تماشای همین لحظه‌هاست.",
+    room8: "در میانه پروژه، نظم طراحی بیشتر از هر جای دیگری دیده می‌شود...",
+    room9: "در این بخش وارد فضای کافه میشوید...",
+    room10:"این قسمت برای کسانی طراحی شده که محیطی آرام‌تر را ترجیح می‌دهند...",
+    room11:"از ورودی تا فضای نشیمن، قوس‌ها، متریال‌ها و نورپردازی، بدون گسست در کنار هم ادامه یافته‌اند..."
+room12:"این آخرین بخش از مسیر کافه‌بیکری است؛ جایی که مسیر بازدید به پایان می‌رسد."
+};
+
+const viewer = pannellum.viewer('panorama', {
+
+    default:{
+        firstScene:"room1"
+    },
+
+    scenes:{
+
+        /* ========================= */
+        /* تصویر 1 */
+        /* فقط → تصویر 2 */
+        /* ========================= */
+
+        room1:{
+            type:"equirectangular",
+            panorama:"1.png",
+            hotSpots:[
+                {
+                    pitch:-5,
+                    yaw:60,
+                    type:"scene",
+                    text:"برو تصویر ۲",
+                    sceneId:"room2",
+                    targetYaw:165,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 2 */
+        /* ← تصویر 1 | → تصویر 3 */
+        /* ========================= */
+
+        room2:{
+            type:"equirectangular",
+            panorama:"2.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:0,
+                    type:"scene",
+                    text:"برو تصویر ۱",
+                    sceneId:"room1",
+                    targetYaw:360,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:65,
+                    type:"scene",
+                    text:"برو تصویر ۳",
+                    sceneId:"room3",
+                    targetYaw:78,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 3 */
+        /* ← تصویر 2 | → تصویر 4 */
+        /* ========================= */
+
+        room3:{
+            type:"equirectangular",
+            panorama:"3.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-120,
+                    type:"scene",
+                    text:"برو تصویر ۲",
+                    sceneId:"room2",
+                    targetYaw:210,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:180,
+                    type:"scene",
+                    text:"برو تصویر ۴",
+                    sceneId:"room4",
+                    targetYaw:100,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 4 */
+        /* ← تصویر 3 | → تصویر 5 */
+        /* ========================= */
+
+        room4:{
+            type:"equirectangular",
+            panorama:"4.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-110,
+                    type:"scene",
+                    text:"برو تصویر ۳",
+                    sceneId:"room3",
+                    targetYaw:250,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:86,
+                    type:"scene",
+                    text:"برو تصویر ۵",
+                    sceneId:"room5",
+                    targetYaw:100,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 5 */
+        /* ← تصویر 4 | → تصویر 6 */
+        /* ========================= */
+
+        room5:{
+            type:"equirectangular",
+            panorama:"5.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-93,
+                    type:"scene",
+                    text:"برو تصویر ۴",
+                    sceneId:"room4",
+                    targetYaw:275,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:115,
+                    type:"scene",
+                    text:"برو تصویر ۶",
+                    sceneId:"room6",
+                    targetYaw:120,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 6 */
+        /* ← تصویر 5 | → تصویر 7 */
+        /* ========================= */
+
+        room6:{
+            type:"equirectangular",
+            panorama:"7.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-7,
+                    type:"scene",
+                    text:"برو تصویر ۵",
+                    sceneId:"room5",
+                    targetYaw:360,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:120,
+                    type:"scene",
+                    text:"برو تصویر ۷",
+                    sceneId:"room7",
+                    targetYaw:145,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 7 */
+        /* ← تصویر 6 | → تصویر 8 */
+        /* ========================= */
+
+        room7:{
+            type:"equirectangular",
+            panorama:"8.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-80,
+                    type:"scene",
+                    text:"برو تصویر ۶",
+                    sceneId:"room6",
+                    targetYaw:300,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:55,
+                    type:"scene",
+                    text:"برو تصویر ۸",
+                    sceneId:"room8",
+                    targetYaw:50,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 8 */
+        /* ← تصویر 7 | → تصویر 9 */
+        /* ========================= */
+
+        room8:{
+            type:"equirectangular",
+            panorama:"9.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-60,
+                    type:"scene",
+                    text:"برو تصویر ۷",
+                    sceneId:"room7",
+                    targetYaw:290,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:60,
+                    type:"scene",
+                    text:"برو تصویر ۹",
+                    sceneId:"room9",
+                    targetYaw:210,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 9 */
+        /* ← تصویر 8 | → تصویر 10 */
+        /* ========================= */
+
+        room9:{
+            type:"equirectangular",
+            panorama:"10.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-120,
+                    type:"scene",
+                    text:"برو تصویر ۸",
+                    sceneId:"room8",
+                    targetYaw:200,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:122,
+                    type:"scene",
+                    text:"برو تصویر ۱۰",
+                    sceneId:"room10",
+                    targetYaw:-47,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 10 */
+        /* ← تصویر 9 | → تصویر 11 */
+        /* ========================= */
+
+        room10:{
+            type:"equirectangular",
+            panorama:"11.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:-112,
+                    type:"scene",
+                    text:"برو تصویر ۹",
+                    sceneId:"room9",
+                    targetYaw:-140,
+                    targetPitch:0
+                },
+                {
+                    pitch:0,
+                    yaw:-178,
+                    type:"scene",
+                    text:"برو تصویر ۱۱",
+                    sceneId:"room11",
+                    targetYaw:320,
+                    targetPitch:0
+                }
+            ]
+        },
+
+
+        /* ========================= */
+        /* تصویر 11 */
+        /* فقط ← تصویر 10 */
+        /* ========================= */
+
+        room11:{
+            type:"equirectangular",
+            panorama:"12.png",
+            hotSpots:[
+                {
+                    pitch:0,
+                    yaw:5,
+                    type:"scene",
+                    text:"برو تصویر ۱۰",
+                    sceneId:"room10",
+                    targetYaw:210,
+                    targetPitch:0
+                },
+        {
+            pitch:0,
+            yaw:100,
+            type:"scene",
+            text:"برو تصویر ۱۳",
+            sceneId:"room12",
+            targetYaw:0,
+            targetPitch:0
+        }
+            ]
+        },room12:{
+    type:"equirectangular",
+    panorama:"13.png",
+    hotSpots:[
+        {
+            pitch:0,
+            yaw:0,
+            type:"scene",
+            text:"برو تصویر ۱۲",
+            sceneId:"room11",
+            targetYaw:180,
+            targetPitch:0
+        }
+    ]
+}
+
+    }
+});
+
+
+/* ========================= */
+/* نمایش مختصات با کلیک راست */
+/* ========================= */
+
+document.getElementById('panorama').addEventListener('contextmenu', function(e) {
+
+    e.preventDefault();
+
+    const coords = viewer.mouseEventToCoords(e);
+
+    console.log(
+        "Pitch: " +
+        coords[0].toFixed(2) +
+        " | Yaw: " +
+        coords[1].toFixed(2)
+    );
+
+});
+
+
+/* ========================= */
+/* متن هنگام تغییر تصویر */
+/* ========================= */
+
+viewer.on("scenechange", function (sceneId) {
+
+    setTimeout(function () {
+
+        const box = document.querySelector(".pnlm-load-box");
+        const p = box ? box.querySelector("p:first-child") : null;
+
+        if (box)
+            box.classList.add("loading-text");
+
+        if (p && sceneTexts[sceneId])
+            p.textContent = sceneTexts[sceneId];
+
+    }, 10);
+
+});
+
+
+/* ========================= */
+/* مدیریت Loading اولیه */
+/* ========================= */
+
+const loadButtonWatcher = setInterval(function () {
+
+    const btn = document.querySelector(".pnlm-load-button");
+
+    if (btn) {
+
+        btn.addEventListener("click", function () {
+
+            const waitForBox = setInterval(function () {
+
+                const box = document.querySelector(".pnlm-load-box");
+                const p = box ? box.querySelector("p:first-child") : null;
+
+                if (box && p) {
+
+                    box.classList.add("loading-text");
+
+                    p.textContent = sceneTexts["room1"];
+
+                    clearInterval(waitForBox);
+                }
+
+            }, 10);
+
+        }, { once: true });
+
+        clearInterval(loadButtonWatcher);
+    }
+
+}, 10);
+
+
+/* ========================= */
+/* پایان Loading */
+/* ========================= */
+
+viewer.on("load", function () {
+
+    setTimeout(function () {
+
+        const box = document.querySelector(".pnlm-load-box");
+
+        if (box)
+            box.classList.remove("loading-text");
+
+    }, 100);
+
+});
+
+</script>
+
+</body>
+</html>
